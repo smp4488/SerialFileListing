@@ -6,122 +6,85 @@
 // IO: Serial
 // Feb 2019 - Rui Azevedo [ruihfazevedo@gmail.com]
 #include <menu.h>
+#include "SerialFileListing.h"
 
 using namespace Menu;
 
+//SerialFileListing sfList();
+
 //minimalist SD Card driver (using arduino SD)
 //we avoid allocating memory here, instead we read all info from SD
-template<typename SDC>
+template<class SerialFileListing>
 class FSO {
 public:
-  using Type=SDC;
-  Type& sdc;
+  using Type=SerialFileListing;
+  Type& sfc;
   //idx_t selIdx=0;//preserve selection context, because we preserve folder ctx too
   //we should use filename instead! idx is useful for delete operations thou...
 
-  File dir;
+  //File dir;
+  SerialFileListing sfList;
 
-  FSO(Type& sdc):sdc(sdc) {}
-  virtual ~FSO() {dir.close();}
+  FSO(Type& sfc):sfc(sfc) {
+//    sfList = new SerialFileListing();
+    Serial.begin(9600);
+    sfc.setSerial(&Serial);
+  }
+  virtual ~FSO() {}
   //open a folder
   bool goFolder(String folderName) {
-    dir.close();
-    // Serial.println("reopen dir, context");
-    dir=sdc.open(folderName.c_str());
-    return dir;
+    return sfc.goFolder(folderName);
   }
   //count entries on folder (files and dirs)
   long count() {
-    // Serial.print("count:");
-    dir.rewindDirectory();
-    int cnt=0;
-    while(true) {
-      File file=dir.openNextFile();
-      if (!file) {
-        file.close();
-        break;
-      }
-      file.close();
-      cnt++;
-    }
-    // Serial.println(cnt);
-    return cnt;
+    return sfc.count();
   }
 
   //get entry index by filename
   long entryIdx(String name) {
-    dir.rewindDirectory();
-    int cnt=0;
-    while(true) {
-      File file=dir.openNextFile();
-      if (!file) {
-        file.close();
-        break;
-      }
-      if(name==file.name()) {
-        file.close();
-        return cnt;
-      }
-      file.close();
-      cnt++;
-    }
-    return 0;//stay at menu start if not found
+    return sfc.entryIdx(name);
   }
 
   //get folder content entry by index
   String entry(long idx) {
-    dir.rewindDirectory();
-    idx_t cnt=0;
-    while(true) {
-      File file=dir.openNextFile();
-      if (!file) {
-        file.close();
-        break;
-      }
-      if(idx==cnt++) {
-        String n=String(file.name())+(file.isDirectory()?"/":"");
-        file.close();
-        return n;
-      }
-      file.close();
-    }
-    return "";
+    return sfc.entry(idx);
   }
 
 };
 
 //////////////////////////////////////////////////////////////////////
 // SD Card cached menu
-template<typename SDC,idx_t maxSz>
-class CachedFSO:public FSO<SDC> {
+template<typename SerialFileListing,idx_t maxSz>
+class CachedFSO:public FSO<SerialFileListing> {
 public:
-  using Type=SDC;
+  using Type=SerialFileListing;
   long cacheStart=0;
   String cache[maxSz];
   long size=0;//folder size (count of files and folders)
-  CachedFSO(Type& sdc):FSO<SDC>(sdc) {}
+  CachedFSO(Type& sfl):FSO<SerialFileListing>(sfl) {}
+  
   void refresh(long start=0) {
     if (start<0) start=0;
     // Serial.print("Refreshing from:");
     // Serial.println(start);
     cacheStart=start;
-    FSO<SDC>::dir.rewindDirectory();
+    FSO<SerialFileListing>::dir.rewindDirectory();
     size=0;
-    while(true) {
-      File file=FSO<SDC>::dir.openNextFile();
-      if (!file) {
-        file.close();
-        break;
-      }
-      if (start<=size&&size<start+maxSz)
-        cache[size-start]=String(file.name())+(file.isDirectory()?"/":"");
-      file.close();
-      size++;
-    }
+//    while(true) {
+//      File file=FSO<SDC>::dir.openNextFile();
+//      if (!file) {
+//        file.close();
+//        break;
+//      }
+//      if (start<=size&&size<start+maxSz)
+//        cache[size-start]=String(file.name())+(file.isDirectory()?"/":"");
+//      file.close();
+//      size++;
+//    }
   }
   //open a folder
   bool goFolder(String folderName) {
-    if (!FSO<SDC>::goFolder(folderName)) return false;
+    if (!FSO<SerialFileListing>::goFolder(folderName)) return false;
     refresh();
     return true;
   }
@@ -131,7 +94,7 @@ public:
     idx_t sz=min(count(),(long)maxSz);
     for(int i=0;i<sz;i++)
       if (name==cache[i]) return i+cacheStart;
-    long at=FSO<SDC>::entryIdx(name);
+    long at=FSO<SerialFileListing>::entryIdx(name);
     //put cache around the missing item
     refresh(at-(maxSz>>1));
     return at;
@@ -145,7 +108,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////
-#include <SD.h>
+//#include <SD.h>
 // instead of allocating options for each file we will instead customize a menu
 // to print the files list, we can opt to use objects for each file for a
 // faster reopening.. but its working quite fast
@@ -242,15 +205,15 @@ public:
   }
 };
 
-class SDMenu:public SDMenuT<FSO<decltype(SD)>> {
+class SDMenu:public SDMenuT<FSO<decltype(SFL)>> {
 public:
   SDMenu(constText* title,const char* at,Menu::action act=doNothing,Menu::eventMask mask=noEvent)
-    :SDMenuT<FSO<decltype(SD)>>(SD,title,at,act,mask) {}
+    :SDMenuT<FSO<decltype(SFL)>>(SFL,title,at,act,mask) {}
 };
 
 template<idx_t cacheSize>
-class CachedSDMenu:public SDMenuT<CachedFSO<decltype(SD),cacheSize>> {
+class CachedSDMenu:public SDMenuT<CachedFSO<decltype(SFL),cacheSize>> {
 public:
   CachedSDMenu(constText* title,const char* at,Menu::action act=doNothing,Menu::eventMask mask=noEvent)
-    :SDMenuT<CachedFSO<decltype(SD),cacheSize>>(SD,title,at,act,mask) {}
+    :SDMenuT<CachedFSO<decltype(SFL),cacheSize>>(SFL,title,at,act,mask) {}
 };

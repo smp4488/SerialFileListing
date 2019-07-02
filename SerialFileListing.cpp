@@ -1,13 +1,14 @@
 #include "SerialFileListing.h"
 
-SerialFileListing::SerialFileListing(byte numChars)
+SerialFileListing::SerialFileListing()
 {
+    byte numChars = 64;
     charSize = numChars;
     receivedChars = new char[charSize];
     tempChars = new char[charSize];
     strtokIndx = new char[charSize];
     messageFromPC = new char[charSize];
-    fileListing = new char[charSize];
+    fileListing = new String[charSize];
 }
 void SerialFileListing::setSerial(Stream *streamObject)
 {
@@ -21,8 +22,8 @@ void SerialFileListing::sendText(char *text)
 
 bool SerialFileListing::goFolder(String folderName)
 {
-  _streamRef->println(":ls:" + folderName);
   dir = folderName;
+//  _streamRef->println(":ls:" + folderName);
 }
 
 void SerialFileListing::poll()
@@ -54,6 +55,7 @@ void SerialFileListing::recvWithStartEndMarkers()
             else {
                 receivedChars[ndx] = '\0'; // terminate the string
                 recvInProgress = false;
+                gettingData = false;
                 ndx = 0;
                 newData = true;
             }
@@ -63,6 +65,9 @@ void SerialFileListing::recvWithStartEndMarkers()
             recvInProgress = true;
         }
     }
+
+//    _streamRef->println(rc);
+//    _streamRef->println(receivedChars);
 }
 
 void SerialFileListing::recieveData()
@@ -82,30 +87,101 @@ void SerialFileListing::recieveData()
 void SerialFileListing::parseData()
 {
     // We need an array here, add items to array
-    static byte ndx = 0;
-    char* s = strtok(tempChars,",");
-    while(s) {
-      //_streamRef->println(s);
-      fileListing[ndx] = new char[strlen(s) + 1];
-      strcpy(fileListing[ndx],s);
-      //strcat(messageFromPC, s); // copy it to messageFromPC
-      s = strtok(NULL, ",");
-      ndx++;
+    static long ndx = 0;
+    char* cmd = strtok(tempChars,":");
+//    _streamRef->println(cmd);
+//    _streamRef->println(String(cmd) == "count");
+    char* s = strtok(NULL,",");
+
+    if (String(cmd) == "ls")
+    {
+      while(s) {
+        fileListing[ndx] = s;
+        s = strtok(NULL, ",");
+        ndx++;
+      }
     }
-    //strtokIndx = strtok(tempChars,",");      // get the first part - the string
+
+    if (String(cmd) == "count") 
+    {
+      _streamRef->println("getting count");
+      countVal = atof(s);
+      fetchingCount = false;
+    }
+
+    if (String(cmd) == "entryIdx") 
+    {
+      _streamRef->println("getting entry idx");
+      entryIdxVal = atol(s);
+      fetchingEntryIdx = false;
+    }
+
+    if (String(cmd) == "entry") 
+    {
+      _streamRef->println("getting entry");
+      entryVal = String(s);
+      fetchingEntry = false;
+    }
     
 }
 
+
 long SerialFileListing::count()
 {
-    return sizeof(fileListing);
+    _streamRef->print(":count:");
+    _streamRef->println(dir);
+
+    fetchingCount = true;
+
+    while (fetchingCount)
+    {
+      poll();
+    }
+
+    return countVal;
 }
 
 long SerialFileListing::entryIdx(String name)
 {
-    
+    _streamRef->print(":entryIdx:");
+    _streamRef->print(dir);
+    _streamRef->println(":" + name);
+
+    fetchingEntryIdx = true;
+
+    while (fetchingEntryIdx)
+    {
+      poll();
+    }
+
+    return entryIdxVal;
 }
 String SerialFileListing::entry(long idx)
 {
-    return fileListing[idx];
+    _streamRef->print(":entry:");
+    _streamRef->print(dir);
+    _streamRef->print(":");
+    _streamRef->println(idx);
+
+    fetchingEntry = true;
+
+    while (fetchingEntry)
+    {
+      poll();
+    }
+
+    return entryVal;
 }
+
+void SerialFileListing::printList()
+{
+    for (int i=0; i<sizeof fileListing/sizeof fileListing[0]; i++) {
+      _streamRef->println(i);
+      String str(fileListing[i]);
+      _streamRef->println(str);
+
+      //_streamRef->println(fileListing[i]);
+    }
+}
+
+SerialFileListing SFL;

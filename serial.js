@@ -1,6 +1,7 @@
 const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
-const PORTNAME = 'COM4';
+// const PORTNAME = 'COM4';
+const PORTNAME = '/dev/cu.usbmodem141101';
 
 const fs = require('fs');
 const basePath = './backing-tracks';
@@ -36,11 +37,39 @@ port.on('open', () => {
         let args = data.split(':');
         let command = args[1];
         let path = args[2];
+        let file = args[3];
 
         if (command === 'ls'){
             console.log('Listing ' + basePath + path);
             fs.readdir(basePath + path, function (err, items) {
-                let res = '<' + items.join() + '>\r\n';
+                let res = '<listing:' + items.join() + '>\r\n';
+                console.log("Sending: ", res);
+                port.write(res);
+            });
+        }
+
+        if (command == 'count'){
+            console.log('Count ' + basePath + path);
+            fs.readdir(basePath + path, function (err, items) {
+                let res = '<count:' + items.length + '>\r\n';
+                console.log("Sending: ", res);
+                port.write(res);
+            });
+        }
+
+        if (command == 'entry') {
+            console.log('Entry ' + file + " " + basePath + path);
+            fs.readdir(basePath + path, function (err, items) {
+                let res = '<entry:' + items[file] + '>\r\n';
+                console.log("Sending: ", res);
+                port.write(res);
+            });
+        }
+
+        if (command == 'entryIdx') {
+            console.log('Entry idx ' + file + " " + basePath + path);
+            fs.readdir(basePath + path, function (err, items) {
+                let res = '<entryIdx:' + items.indexOf(file) + '>\r\n';
                 console.log("Sending: ", res);
                 port.write(res);
             });

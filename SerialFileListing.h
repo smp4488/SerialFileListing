@@ -6,7 +6,7 @@
 class SerialFileListing
 {
   public:
-    SerialFileListing(byte charSize);
+    SerialFileListing();
     byte charSize;
     String dir;
     
@@ -18,6 +18,7 @@ class SerialFileListing
     long entryIdx(String name);
     String entry(long idx);
     void recieveData();
+    void printList();
 
   private:
 //    const byte numChars = 64;
@@ -25,12 +26,25 @@ class SerialFileListing
     char* tempChars;        // temporary array for use when parsing
     char* strtokIndx;
     char* messageFromPC;
-    char* fileListing;
+    String* fileListing;
     boolean newData = false;
+    
+    long countVal = 0;
+    bool fetchingCount = false;
+    
+    bool fetchingEntryIdx = false;
+    long entryIdxVal = 0;
+    
+    bool fetchingEntry = false;
+    String entryVal = "";
+    
+    bool gettingData = false;
     
     Stream *_streamRef;
     void recvWithStartEndMarkers();
     void parseData();
 };
+
+extern SerialFileListing SFL;
 
 #endif
