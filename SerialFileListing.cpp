@@ -74,7 +74,7 @@ void SerialFileListing::recieveData()
         parseData();
         //showParsedData();
 //        _streamRef->println(messageFromPC);
-        _streamRef->println(fileListing);
+        //_streamRef->println(fileListing);
         newData = false;
     }
 }
@@ -85,7 +85,7 @@ void SerialFileListing::parseData()
     static byte ndx = 0;
     char* s = strtok(tempChars,",");
     while(s) {
-      _streamRef->println(s);
+      //_streamRef->println(s);
       fileListing[ndx] = new char[strlen(s) + 1];
       strcpy(fileListing[ndx],s);
       //strcat(messageFromPC, s); // copy it to messageFromPC

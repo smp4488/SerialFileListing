@@ -8,9 +8,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Starting");
   sfList.setSerial(&Serial);
-  sfList.goFolder("/jazz");
+  sfList.goFolder("/");
   sfList.poll();
-  Serial.println(sfList.count());
 }
 
 void loop() {
@@ -18,5 +17,4 @@ void loop() {
   //sfList.goFolder("/");
   //delay(1000);
   sfList.poll();
-  //Serial.println(sfList.count());
 }
