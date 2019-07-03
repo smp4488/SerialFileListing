@@ -68,7 +68,7 @@ public:
     // Serial.print("Refreshing from:");
     // Serial.println(start);
     cacheStart=start;
-    FSO<SerialFileListing>::dir.rewindDirectory();
+    //FSO<SerialFileListing>::dir.rewindDirectory();
     size=0;
 //    while(true) {
 //      File file=FSO<SDC>::dir.openNextFile();

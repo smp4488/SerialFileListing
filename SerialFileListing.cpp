@@ -24,6 +24,7 @@ bool SerialFileListing::goFolder(String folderName)
 {
   dir = folderName;
 //  _streamRef->println(":ls:" + folderName);
+  return true;
 }
 
 void SerialFileListing::poll()
