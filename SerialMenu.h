@@ -27,8 +27,8 @@ public:
 
   FSO(Type& sfc):sfc(sfc) {
 //    sfList = new SerialFileListing();
-    Serial.begin(9600);
-    sfc.setSerial(&Serial);
+    //Serial.begin(9600);
+    //sfc.setSerial(&Serial);
   }
   virtual ~FSO() {}
   //open a folder

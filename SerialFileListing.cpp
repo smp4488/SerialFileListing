@@ -8,8 +8,12 @@ SerialFileListing::SerialFileListing()
     tempChars = new char[charSize];
     strtokIndx = new char[charSize];
     messageFromPC = new char[charSize];
-    fileListing = new String[charSize];
 }
+
+void SerialFileListing::begin() {
+  
+}
+
 void SerialFileListing::setSerial(Stream *streamObject)
 {
   _streamRef = streamObject;
@@ -56,7 +60,6 @@ void SerialFileListing::recvWithStartEndMarkers()
             else {
                 receivedChars[ndx] = '\0'; // terminate the string
                 recvInProgress = false;
-                gettingData = false;
                 ndx = 0;
                 newData = true;
             }
@@ -97,7 +100,7 @@ void SerialFileListing::parseData()
     if (String(cmd) == "ls")
     {
       while(s) {
-        fileListing[ndx] = s;
+        //fileListing[ndx] = s;
         s = strtok(NULL, ",");
         ndx++;
       }
@@ -176,13 +179,13 @@ String SerialFileListing::entry(long idx)
 
 void SerialFileListing::printList()
 {
-    for (int i=0; i<sizeof fileListing/sizeof fileListing[0]; i++) {
-      _streamRef->println(i);
-      String str(fileListing[i]);
-      _streamRef->println(str);
-
-      //_streamRef->println(fileListing[i]);
-    }
+//    for (int i=0; i<sizeof fileListing/sizeof fileListing[0]; i++) {
+//      _streamRef->println(i);
+//      String str(fileListing[i]);
+//      _streamRef->println(str);
+//
+//      //_streamRef->println(fileListing[i]);
+//    }
 }
 
 SerialFileListing SFL;

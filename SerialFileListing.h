@@ -12,6 +12,7 @@ class SerialFileListing
     
     void setSerial(Stream *streamObject);
     void poll();
+    void begin();
     void sendText(char *text);
     bool goFolder(String folderName);
     long count();
@@ -26,7 +27,6 @@ class SerialFileListing
     char* tempChars;        // temporary array for use when parsing
     char* strtokIndx;
     char* messageFromPC;
-    String* fileListing;
     boolean newData = false;
     
     long countVal = 0;
@@ -37,8 +37,6 @@ class SerialFileListing
     
     bool fetchingEntry = false;
     String entryVal = "";
-    
-    bool gettingData = false;
     
     Stream *_streamRef;
     void recvWithStartEndMarkers();

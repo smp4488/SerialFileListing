@@ -3,13 +3,14 @@
         {
             "name": "Win32",
             "includePath": [
+                "${workspaceFolder}/**",
                 "C:\\Users\\smplman\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
                 "C:\\Users\\smplman\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\**",
-                "${workspaceFolder}/**",
                 "C:\\Users\\smplman\\Documents\\Arduino\\libraries\\**",
                 "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/**",
                 "/Applications/Arduino.app/Contents/Java/tools/**",
-                "/Users/speery/Documents/Arduino/libraries/"
+                "/Applications/Arduino.app/Contents/Java/libraries/**",
+                "/Users/speery/Documents/Arduino/libraries/**"
             ],
             "defines": [
                 "_DEBUG",

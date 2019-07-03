@@ -3,8 +3,6 @@
 #include <menu.h>
 #include <TimerOne.h>
 #include <menuIO/serialIO.h>
-#include <menuIO/serialOut.h>
-#include <menuIO/serialIn.h>
 #include <menuIO/chainStream.h>
 #include <menuIO/clickEncoderIn.h>
 #include "SerialMenu.h"
@@ -64,17 +62,13 @@ MENU_OUTPUTS(out,MAX_DEPTH
 NAVROOT(nav,mainMenu,MAX_DEPTH,in,out);
 
 void setup() {
-  Timer1.initialize(1000);
-  Timer1.attachInterrupt(timerIsr);
-
   //filePickMenu.begin();
   // put your setup code here, to run once:
-//  Serial.begin(9600);
-//  Serial.println("Starting");
-//  sfList.setSerial(&Serial);
-//  sfList.goFolder("/");
-//  sfList.poll();
-//  Serial.println(sfList.count());
+  Serial.begin(9600);
+  SFL.setSerial(&Serial);
+  Timer1.initialize(1000);
+  Timer1.attachInterrupt(timerIsr);
+  delay(2000);
 }
 
 
