@@ -16,7 +16,10 @@ using namespace Menu;
 
 // Serial File Listing /////////////////////////////////////
 result filePick(eventMask event, navNode& nav, prompt &item);
-CachedSDMenu<32> filePickMenu("Backing Tracks","/",filePick,enterEvent);
+//CachedSDMenu<32> filePickMenu("Backing Tracks","/",filePick,enterEvent);
+const char pickTitle[] PROGMEM="Backing Tracks";
+const char pickFolder[] PROGMEM="/";
+SDMenu filePickMenu(pickTitle,pickFolder,filePick,enterEvent);
 
 //implementing the handler here after filePick is defined...
 result filePick(eventMask event, navNode& nav, prompt &item) {
@@ -43,7 +46,7 @@ ClickEncoder clickEncoder(encA,encB,encBtn,4);
 ClickEncoderStream encStream(clickEncoder,1);
 
 MENU(mainMenu, "Guitarix Pedalboard Menu", Menu::doNothing, Menu::noEvent, Menu::wrapStyle
-  ,SUBMENU(filePick)
+  ,SUBMENU(filePickMenu)
   ,OP("Sub1",Menu::doNothing,anyEvent)
   ,OP("Sub2",Menu::doNothing,anyEvent)
   ,OP("Sub3",Menu::doNothing,anyEvent)
@@ -62,18 +65,22 @@ MENU_OUTPUTS(out,MAX_DEPTH
 NAVROOT(nav,mainMenu,MAX_DEPTH,in,out);
 
 void setup() {
-  //filePickMenu.begin();
   // put your setup code here, to run once:
   Serial.begin(9600);
   SFL.setSerial(&Serial);
   Timer1.initialize(1000);
   Timer1.attachInterrupt(timerIsr);
+
+  filePickMenu.begin();
   delay(2000);
+  
+  Serial.println("initialization done.");
 }
 
 
 void loop() {
   nav.poll();
+//  SFL.poll();
 //  sfList.poll();
 //  delay(3000);
 //  Serial.println(sfList.count());

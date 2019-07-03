@@ -13,13 +13,14 @@ class SerialFileListing
     void setSerial(Stream *streamObject);
     void poll();
     void begin();
-    void sendText(char *text);
+    void sendText(String text);
     bool goFolder(String folderName);
     long count();
     long entryIdx(String name);
     String entry(long idx);
     void recieveData();
     void printList();
+    Stream *testSerial;
 
   private:
 //    const byte numChars = 64;

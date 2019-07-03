@@ -17,15 +17,18 @@ void SerialFileListing::begin() {
 void SerialFileListing::setSerial(Stream *streamObject)
 {
   _streamRef = streamObject;
+  _streamRef->println("Set Stream object");
+  testSerial = streamObject;
 }
 
-void SerialFileListing::sendText(char *text)
+void SerialFileListing::sendText(String text)
 {
   _streamRef->println(text);
 }
 
 bool SerialFileListing::goFolder(String folderName)
 {
+  _streamRef->println("Go folder" + folderName);
   dir = folderName;
 //  _streamRef->println(":ls:" + folderName);
   return true;

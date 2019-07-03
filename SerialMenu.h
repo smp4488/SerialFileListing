@@ -10,44 +10,54 @@
 
 using namespace Menu;
 
-//SerialFileListing sfList();
-
 //minimalist SD Card driver (using arduino SD)
 //we avoid allocating memory here, instead we read all info from SD
 template<class SerialFileListing>
 class FSO {
 public:
   using Type=SerialFileListing;
-  Type& sfc;
+  Type& sfl;
   //idx_t selIdx=0;//preserve selection context, because we preserve folder ctx too
   //we should use filename instead! idx is useful for delete operations thou...
 
   //File dir;
-  SerialFileListing sfList;
+  //SerialFileListing sfList;
 
-  FSO(Type& sfc):sfc(sfc) {
+  FSO(Type& sfl):sfl(sfl) {
 //    sfList = new SerialFileListing();
     //Serial.begin(9600);
-    //sfc.setSerial(&Serial);
+    //sfl.setSerial(&Serial);
+//    sfl._streamRef->println("new FSO");
+//    sfl.sendText("test");
+//  sfl.testSerial->println("test");
   }
   virtual ~FSO() {}
+  
+//  void setSerial(Stream *streamObject) {
+//    sfl.setSerial(streamObject);
+//  }
+
   //open a folder
   bool goFolder(String folderName) {
-    return sfc.goFolder(folderName);
+    //return sfl.goFolder(folderName);
+    return true;
   }
   //count entries on folder (files and dirs)
   long count() {
-    return sfc.count();
+    //return sfl.count();
+    return 1;
   }
 
   //get entry index by filename
   long entryIdx(String name) {
-    return sfc.entryIdx(name);
+    //return sfl.entryIdx(name);
+    return 1;
   }
 
   //get folder content entry by index
   String entry(long idx) {
-    return sfc.entry(idx);
+    //return sfl.entry(idx);
+    return "Test1";
   }
 
 };
@@ -61,15 +71,32 @@ public:
   long cacheStart=0;
   String cache[maxSz];
   long size=0;//folder size (count of files and folders)
-  CachedFSO(Type& sfl):FSO<SerialFileListing>(sfl) {}
+  long ct=0;
+  CachedFSO(Type& sfl):FSO<SerialFileListing>(sfl) {
+//    sfl._streamRef->println("new CachedFSO");  
+  }
   
   void refresh(long start=0) {
     if (start<0) start=0;
-    // Serial.print("Refreshing from:");
-    // Serial.println(start);
+//    Serial.print("Refreshing from:");
+//    Serial.println(start);
     cacheStart=start;
     //FSO<SerialFileListing>::dir.rewindDirectory();
     size=0;
+    ct=FSO<SerialFileListing>::count();
+//    Serial.println(ct);
+    
+//    for (int i=0; i<ct; i++) {
+//      if (start<=size&&size<start+maxSz)
+//      {
+////        cache[size-start]=String(file.name())+(file.isDirectory()?"/":"");
+//        cache[size-start]=String(FSO<SerialFileListing>::entry(i));
+////        cache[size-start]=String(i); 
+//      }
+//        
+//      size++;
+//    }
+    cache[0]= String("Test1");
 //    while(true) {
 //      File file=FSO<SDC>::dir.openNextFile();
 //      if (!file) {
@@ -84,26 +111,31 @@ public:
   }
   //open a folder
   bool goFolder(String folderName) {
-    if (!FSO<SerialFileListing>::goFolder(folderName)) return false;
-    refresh();
+    //if (!FSO<SerialFileListing>::goFolder(folderName)) return false;
+    //refresh();
     return true;
   }
-  long count() {return size;}
+  long count() {
+    //return size;
+    return 1;
+  }
 
   long entryIdx(String name) {
-    idx_t sz=min(count(),(long)maxSz);
-    for(int i=0;i<sz;i++)
-      if (name==cache[i]) return i+cacheStart;
-    long at=FSO<SerialFileListing>::entryIdx(name);
-    //put cache around the missing item
-    refresh(at-(maxSz>>1));
-    return at;
+//    idx_t sz=min(count(),(long)maxSz);
+//    for(int i=0;i<sz;i++)
+//      if (name==cache[i]) return i+cacheStart;
+//    long at=FSO<SerialFileListing>::entryIdx(name);
+//    //put cache around the missing item
+//    refresh(at-(maxSz>>1));
+//    return at;
+    return 1;
   }
   String entry(long idx) {
-    if (0>idx||idx>=size) return "";
-    if (cacheStart<=idx&&idx<(cacheStart+maxSz)) return cache[idx-cacheStart];
-    refresh(idx-(maxSz>>1));
-    return entry(idx);
+//    if (0>idx||idx>=size) return "";
+//    if (cacheStart<=idx&&idx<(cacheStart+maxSz)) return cache[idx-cacheStart];
+//    refresh(idx-(maxSz>>1));
+//    return entry(idx);
+    return String("Test2");
   }
 };
 
@@ -126,10 +158,10 @@ public:
   String selectedFolder="/";
   String selectedFile="";
   // using menuNode::menuNode;//do not use default constructors as we wont allocate for data
-  SDMenuT(typename FS::Type& sd,constText* title,const char* at,Menu::action act=doNothing,Menu::eventMask mask=noEvent)
+  SDMenuT(typename FS::Type& sfl,constText* title,const char* at,Menu::action act=doNothing,Menu::eventMask mask=noEvent)
     :menuNode(title,0,NULL,act,mask,
       wrapStyle,(systemStyles)(_menuData|_canNav))
-    ,FS(sd)
+    ,FS(sfl)
     {}
 
   void begin() {FS::goFolder(folderName);}
