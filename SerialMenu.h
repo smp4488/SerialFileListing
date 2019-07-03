@@ -164,7 +164,9 @@ public:
     ,FS(sfl)
     {}
 
-  void begin() {FS::goFolder(folderName);}
+  void begin() {
+    FS::goFolder(folderName);
+   }
 
   //this requires latest menu version to virtualize data tables
   prompt& operator[](idx_t i) const override {return *(prompt*)this;}//this will serve both as menu and as its own prompt
@@ -218,9 +220,10 @@ public:
   //print menu and items as this is a virtual data menu
   Used printTo(navRoot &root,bool sel,menuOut& out, idx_t idx,idx_t len,idx_t pn) {
     if(root.navFocus!=this) {//show given title or filename if selected
-      return selectedFile==""?
-        menuNode::printTo(root,sel,out,idx,len,pn):
-        out.printRaw(selectedFile.c_str(),len);
+      //return selectedFile==""?
+        //menuNode::printTo(root,sel,out,idx,len,pn):
+        //out.printRaw(selectedFile.c_str(),len);
+        return out.printRaw(shadow->text,len);
     } else if(idx==-1) {//when menu open (show folder name)
       ((menuNodeShadow*)shadow)->sz=SDMenuT<FS>::count()+USE_BACKDOTS;
       idx_t at=folderName.lastIndexOf("/",folderName.length()-2)+1;

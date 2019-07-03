@@ -10,25 +10,25 @@ SerialFileListing::SerialFileListing()
     messageFromPC = new char[charSize];
 }
 
-void SerialFileListing::begin() {
-  
-}
+//SerialFileListing::begin()
+//{
+//  Serial.begin(9600);
+//}
 
-void SerialFileListing::setSerial(Stream *streamObject)
+void SerialFileListing::setSerial(Stream &streamObject)
 {
   _streamRef = streamObject;
-  _streamRef->println("Set Stream object");
-  testSerial = streamObject;
+  _streamRef.println("Set Stream object");
 }
 
 void SerialFileListing::sendText(String text)
 {
-  _streamRef->println(text);
+  _streamRef.println(text);
 }
 
 bool SerialFileListing::goFolder(String folderName)
 {
-  _streamRef->println("Go folder" + folderName);
+  _streamRef.println("Go folder" + folderName);
   dir = folderName;
 //  _streamRef->println(":ls:" + folderName);
   return true;
@@ -49,8 +49,8 @@ void SerialFileListing::recvWithStartEndMarkers()
     char endMarker = '>';
     char rc;
 
-    while (_streamRef->available() > 0 && newData == false) {
-        rc = _streamRef->read();
+    while (_streamRef.available() > 0 && newData == false) {
+        rc = _streamRef.read();
 
         if (recvInProgress == true) {
             if (rc != endMarker) {
@@ -111,21 +111,21 @@ void SerialFileListing::parseData()
 
     if (String(cmd) == "count") 
     {
-      _streamRef->println("getting count");
+      _streamRef.println("getting count");
       countVal = atof(s);
       fetchingCount = false;
     }
 
     if (String(cmd) == "entryIdx") 
     {
-      _streamRef->println("getting entry idx");
+      _streamRef.println("getting entry idx");
       entryIdxVal = atol(s);
       fetchingEntryIdx = false;
     }
 
     if (String(cmd) == "entry") 
     {
-      _streamRef->println("getting entry");
+      _streamRef.println("getting entry");
       entryVal = String(s);
       fetchingEntry = false;
     }
@@ -135,8 +135,8 @@ void SerialFileListing::parseData()
 
 long SerialFileListing::count()
 {
-    _streamRef->print(":count:");
-    _streamRef->println(dir);
+    _streamRef.print(":count:");
+    _streamRef.println(dir);
 
     fetchingCount = true;
 
@@ -150,9 +150,9 @@ long SerialFileListing::count()
 
 long SerialFileListing::entryIdx(String name)
 {
-    _streamRef->print(":entryIdx:");
-    _streamRef->print(dir);
-    _streamRef->println(":" + name);
+    _streamRef.print(":entryIdx:");
+    _streamRef.print(dir);
+    _streamRef.println(":" + name);
 
     fetchingEntryIdx = true;
 
@@ -165,10 +165,10 @@ long SerialFileListing::entryIdx(String name)
 }
 String SerialFileListing::entry(long idx)
 {
-    _streamRef->print(":entry:");
-    _streamRef->print(dir);
-    _streamRef->print(":");
-    _streamRef->println(idx);
+    _streamRef.print(":entry:");
+    _streamRef.print(dir);
+    _streamRef.print(":");
+    _streamRef.println(idx);
 
     fetchingEntry = true;
 

@@ -15,7 +15,8 @@
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "MENU_DEBUG"
             ],
             "intelliSenseMode": "msvc-x64",
             "forcedInclude": [

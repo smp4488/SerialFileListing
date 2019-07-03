@@ -16,13 +16,14 @@ using namespace Menu;
 
 // Serial File Listing /////////////////////////////////////
 result filePick(eventMask event, navNode& nav, prompt &item);
-//CachedSDMenu<32> filePickMenu("Backing Tracks","/",filePick,enterEvent);
 const char pickTitle[] PROGMEM="Backing Tracks";
 const char pickFolder[] PROGMEM="/";
+//CachedSDMenu<32> filePickMenu(pickTitle,pickFolder,filePick,enterEvent);
 SDMenu filePickMenu(pickTitle,pickFolder,filePick,enterEvent);
 
 //implementing the handler here after filePick is defined...
 result filePick(eventMask event, navNode& nav, prompt &item) {
+  Serial.println("selected");
   // switch(event) {//for now events are filtered only for enter, so we dont need this checking
   //   case enterCmd:
       if (nav.root->navFocus==(navTarget*)&filePickMenu) {
@@ -67,11 +68,11 @@ NAVROOT(nav,mainMenu,MAX_DEPTH,in,out);
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  SFL.setSerial(&Serial);
+  //SFL.setSerial(Serial);
   Timer1.initialize(1000);
   Timer1.attachInterrupt(timerIsr);
 
-  filePickMenu.begin();
+  //filePickMenu.begin(&Serial);
   delay(2000);
   
   Serial.println("initialization done.");

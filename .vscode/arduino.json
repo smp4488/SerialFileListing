@@ -2,6 +2,6 @@
     "board": "arduino:avr:uno",
     "sketch": "SerialFileListing.ino",
     "output": "../build",
-    "port": "COM4",
-    "programmer": "Arduino as ISP"
+    "port": "/dev/cu.usbmodem141101",
+    "debugger": "jlink"
 }

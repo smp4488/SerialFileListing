@@ -8,9 +8,9 @@ class SerialFileListing
   public:
     SerialFileListing();
     byte charSize;
-    String dir;
+    String dir = "/";
     
-    void setSerial(Stream *streamObject);
+    void setSerial(Stream &streamObject);
     void poll();
     void begin();
     void sendText(String text);
@@ -20,7 +20,6 @@ class SerialFileListing
     String entry(long idx);
     void recieveData();
     void printList();
-    Stream *testSerial;
 
   private:
 //    const byte numChars = 64;
@@ -39,7 +38,7 @@ class SerialFileListing
     bool fetchingEntry = false;
     String entryVal = "";
     
-    Stream *_streamRef;
+    Stream &_streamRef;
     void recvWithStartEndMarkers();
     void parseData();
 };
