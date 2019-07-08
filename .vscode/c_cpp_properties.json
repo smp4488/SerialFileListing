@@ -1,28 +1,64 @@
 {
     "configurations": [
         {
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+        },
+        {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:\\Users\\smplman\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
-                "C:\\Users\\smplman\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\**",
-                "C:\\Users\\smplman\\Documents\\Arduino\\libraries\\**",
-                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/**",
-                "/Applications/Arduino.app/Contents/Java/tools/**",
-                "/Applications/Arduino.app/Contents/Java/libraries/**",
-                "/Users/speery/Documents/Arduino/libraries/**"
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/cores/arduino",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/variants/standard",
+                "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/ClickEncoder",
+                "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/TimerOne",
+                "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/streamFlow/src",
+                "C:/Users/smplman/.platformio/lib/ArduinoMenu library_ID1468/src",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src",
+                "C:/Users/smplman/.platformio/lib/MIDIUSB_ID1104/src",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src",
+                "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src",
+                "C:/Users/smplman/.platformio/packages/tool-unity",
+                "c:/Users/smplman/Documents/Arduino/SerialFileListing/include",
+                "c:/Users/smplman/Documents/Arduino/SerialFileListing/src",
+                ""
             ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${workspaceRoot}/.vscode/.browse.c_cpp.db",
+                "path": [
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/cores/arduino",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/variants/standard",
+                    "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/ClickEncoder",
+                    "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/TimerOne",
+                    "c:/Users/smplman/Documents/Arduino/SerialFileListing/.piolibdeps/streamFlow/src",
+                    "C:/Users/smplman/.platformio/lib/ArduinoMenu library_ID1468/src",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src",
+                    "C:/Users/smplman/.platformio/lib/MIDIUSB_ID1104/src",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src",
+                    "C:/Users/smplman/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src",
+                    "C:/Users/smplman/.platformio/packages/tool-unity",
+                    "c:/Users/smplman/Documents/Arduino/SerialFileListing/include",
+                    "c:/Users/smplman/Documents/Arduino/SerialFileListing/src",
+                    ""
+                ]
+            },
             "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "MENU_DEBUG"
+                "PLATFORMIO=30607",
+                "ARDUINO_AVR_UNO",
+                "MENU_USERAM",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10805",
+                "__AVR_ATmega328P__",
+                ""
             ],
-            "intelliSenseMode": "msvc-x64",
-            "forcedInclude": [
-                "C:\\Users\\smplman\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.6.23\\cores\\arduino\\Arduino.h",
-                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino/Arduino.h"
-            ]
+            "intelliSenseMode": "clang-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "\"C:/Users/smplman/.platformio/packages/toolchain-atmelavr/bin/avr-gcc.exe\" -mmcu=atmega328p"
         }
     ],
     "version": 4
